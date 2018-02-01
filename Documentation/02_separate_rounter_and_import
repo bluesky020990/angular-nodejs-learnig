@@ -1,0 +1,107 @@
+1. In server.js file, we import router for user:
+
+//include the routes file
+var routes = require('./routes/route');
+
+////////
+app.use('/', routes);
+
+
+
+
+2. In router.js, we must export router to use
+
+module.exports = router;
+
+
+
+NOW, we have two file
+
+
+
+root
+  |-- routes
+  |     |-- route.js
+  |
+  |-- server.js
+
+
+
+------------------------ route.js ------------------------------
+var express = require('express');
+var router = express.Router();
+
+//Middle ware that is specific to this router
+router.use(function timeLog(req, res, next) {
+    console.log('Time: ', Date.now());
+    next();
+});
+
+
+// Define the home page route
+router.get('/', function(req, res) {
+    res.send('home page');
+});
+
+// Define the about route
+router.get('/about', function(req, res) {
+    res.send('About us');
+});
+
+
+module.exports = router;
+------------------------ route.js ------------------------------
+
+
+
+
+
+
+------------------------ users.js ------------------------------
+var express = require('express');
+var user = express.Router();
+
+// prefix is /users (See html server for more detail)
+user.get('/about', function(req, res) {
+    res.send('This is website of B');
+});
+
+// Define the about route
+user.get('/moi-moi', function(req, res) {
+    res.send('Moi Moi la 1 dua do hoi chu la gi nua');
+});
+
+
+module.exports = user;
+------------------------ users.js ------------------------------
+
+
+
+
+
+
+------------------------ server.js ------------------------------
+var fs = require('fs');
+var http = require('http');
+var express = require('express');
+var app = express();
+
+var httpServer = http.createServer(app);
+
+httpServer.listen(8080);
+
+//include the routes file
+var routes = require('./routes/route');
+var users = require('./routes/users');
+
+app.use('/', routes);
+app.use('/users', users);
+------------------------ server.js ------------------------------
+
+
+In the example, we create controler rounter to handle the url start with /
+
+so, when you visit localhost:8080/ and localhost:8080/about, they receive message and return it to route.js to process
+When you visit url begin with /users, the app return the request to users.js process.
+
+To view example, please visits http://localhost:8080/about and http://localhost/users/moi-moi

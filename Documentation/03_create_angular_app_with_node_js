@@ -1,0 +1,138 @@
+In 01, and 02, we know how to create a web server and start them and create controler to handle more information about them
+In the lesson, we continuous learning how to create angular app with node js
+
+In current structure, I add more folder
+
+
+root
+ |-- public
+ |     |-- src
+ |     |    |-- css
+ |     |    |-- js
+ |     |
+ |     |-- index.html
+ |
+ |-- single_page_server.js
+
+
+In single_page_server.js, we create a controller to handle all request from user. The controller return index.html file.
+
+In this file, we create more angular function and create api to handle them
+
+So, view detail
+
+
+I. Create Angular App
+
+1. Create single_page_server.js with content :
+
+--------------------------- single_page_server.js ------------------------------
+var http = require('http');
+var express = require('express');
+var path = require('path');
+var app = express();
+
+var api = require('./routes/angular-api');
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', __dirname + '/views');
+
+
+app.get('/', function(req, res){
+    res.render('index.html');
+});
+
+app.use('/api', api);
+
+app.listen(8080);
+--------------------------- single_page_server.js ------------------------------
+
+We have two important thing in here:
+   app.get('/', function(req, res){
+       res.render('index.html');
+   });
+
+   -- This function listen all url and return to single view
+
+   app.use('/api', api);
+
+
+2. Create a rounter to handle all api request
+---------------------- angular_api.js --------------------------
+
+var express = require('express');
+var angularAPI = express.Router();
+
+// prefix is /api (See html server for more detail)
+angularAPI.get('/home', function(req, res) {
+    res.json({
+        title: "This is website of B",
+        content : "Welcome to my website. Have fun!!!"
+    });
+});
+
+module.exports = angularAPI;
+
+---------------------- angular_api.js --------------------------
+
+This api receive a message and return a json object to client
+
+
+
+
+
+II. Create view page
+
+1. html page
+
+<!DOCTYPE html>
+<html lang="en" ng-app="angularApp">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Node/Angular Todo App</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="src/js/main.js"></script>
+</head>
+
+<body ng-controller="homeController">
+<div class="container" >
+    <div class="jumbotron text-center">
+        <h1>{{ homeData.title }}</h1>
+    </div>
+
+    <div class="container">
+        {{homeData.content}}
+    </div>
+</div>
+</body>
+</html>
+
+Please remember these data :
+ - ng-app="angularApp"
+ - ng-controller="homeController"
+ - <h1>{{ homeData.title }}</h1>
+ - <h1>{{ homeData.content }}</h1>
+
+2. create js file
+
+var angularApp = angular.module('angularApp', []);
+
+angularApp.controller('homeController', function($scope, $http){
+    $http.get('/api/home').success(function (response) {
+        $scope.homeData = response;
+    });
+});
+
+the js file create a new controler ("homeController"), get data by send url /api/home to nodejs server.
+after receive response, It saves data in to global object ($scope) and using it to render the content inside html page.
+
+
+
