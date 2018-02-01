@@ -1,0 +1,25 @@
+{
+  "name": "angular",
+  "version": "1.0.0",
+  "description": "Learning Angular Basic",
+  "main": "index.js",
+  "scripts": {
+    "test": "test command"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "angular",
+    "khanh",
+    "tran",
+    "moi",
+    "moi"
+  ],
+  "author": "Khanh Tran",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
